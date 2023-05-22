@@ -43,8 +43,18 @@ server.on('request', (req, res) => {
 })
 
 const nodeUrl = require('node:url')
+/*
+* URL <URL> 一个 WHATWG URL 对象
+* options <Object>
+    auth <boolean> (a:b@)如果序列化的网址字符串应包含用户名和密码，则为 true，否则为 false。 默认值: true。
+    fragment <boolean> (#foo)如果序列化的网址字符串应包含片段，则为 true，否则为 false。 默认值: true。
+    search <boolean> (?abc)如果序列化的网址字符串应包含搜索查询，则为 true，否则为 false。 默认值: true。
+    unicode <boolean> true 如果出现在网址字符串的主机组件中的 Unicode 字符应该被直接编码而不是 Punycode 编码。 默认值: false。
+* 返回： <string>
+* */
 const myURL = new URL('https://a:b@测试?abc#foo')
-const formatRes = nodeUrl.format(myURL)
+console.log(myURL)
+const formatRes = nodeUrl.format(myURL, { auth: false, fragment: false, search: false, unicode: true })
 console.log(formatRes)
 
 server.listen(8066, () => {
