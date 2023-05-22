@@ -57,6 +57,13 @@ console.log(myURL)
 const formatRes = nodeUrl.format(myURL, { auth: false, fragment: false, search: false, unicode: true })
 console.log(formatRes)
 
+const { fileURLToPath, pathToFileURL, urlToHttpOptions } = require('node:url')
+const filePath = fileURLToPath('file://nas/foo.txt')
+const fileUrl = pathToFileURL(filePath)
+console.log(filePath, fileUrl)
+const urlOption = urlToHttpOptions(myURL)
+console.log(urlOption)
+
 server.listen(8066, () => {
     console.log('server start at http://localhost:8066')
 })
