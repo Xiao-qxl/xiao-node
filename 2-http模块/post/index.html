@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  fetch("http://localhost:3000/api/aaa")
+      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+        const preDom = document.createElement("pre")
+        preDom.innerText = JSON.stringify(res)
+        preDom.style = `
+          word-wrap: break-word;
+          white-space: pre-wrap;
+        `
+        document.body.appendChild(preDom)
+      })
+</script>
+</body>
+</html>
