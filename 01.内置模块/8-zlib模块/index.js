@@ -6,7 +6,7 @@ const gzip = zlib.createGzip()
 
 http.createServer((req, res) => {
   // res本身就是一个可写流
-  const readStream = fs.createReadStream("../6-fs模块/fs.md")
+  const readStream = fs.createReadStream("./index.js")
   res.writeHead(200, {
     "Content-type": "application/x-javascript;charset=utf-8",
     "Content-Encoding": "gzip"
