@@ -12,11 +12,10 @@ function start() {
   http.createServer((req, res) => {
     const myUrl = new URL(req.url, "http://127.0.0.1")
     try {
-      Router[myUrl.pathname](res)
+      Router[myUrl.pathname](req, res)
     } catch (e) {
-      Router['/404'](res)
+      Router['/404'](req, res)
     }
-    res.end()
   }).listen(3000, () => {
     console.log('server start at http://localhost:3000')
   })
