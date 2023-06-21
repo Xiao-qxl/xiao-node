@@ -16,12 +16,17 @@
       width: 100vw;
       height: 100vh;
       overflow: auto;
+      background-color: rgba(233,157,34, 1);
     }
     ul li {
       width: 100%;
       height: 100%;
       list-style: none;
       overflow: hidden;
+      background-clip: padding-box;
+      filter: blur(1px);
+      clip-path: polygon(0 5%, 10% 7%, 20% 3%, 30% 7%, 40% 1%, 50% 7%, 60% 3%, 70% 7%, 80% 1%, 90% 7%, 100% 5%, 100% 100%, 0 100%);
+      box-shadow: 0 10px 10px rgba(233,157,34, 1);
     }
     ul li > div {
       width: 100%;
@@ -53,8 +58,8 @@
     li:nth-child(5) > div {
       background-image: url("./images/db4.png");
       background-position-x: 50%;
-      background-size: cover;
-      transform: scale(1.2);
+      background-position-y: 80%;
+      transform: scale(1.4);
     }
     li:nth-child(6) > div {
       background-image: url("./images/db6.png");
