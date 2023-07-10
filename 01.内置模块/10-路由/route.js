@@ -3,15 +3,15 @@ const path = require("path");
 const mime = require("mime")
 
 const route = {
-  "/": (req, res) => render(res, "./static/html/login.html"),
-  "/login": (req, res) => render(res, "./static/html/login.html"),
-  "/home": (req, res) => render(res, "./static/html/home.html"),
+  "/": (req, res) => render(res, "./static/login.html"),
+  "/login": (req, res) => render(res, "./static/login.html"),
+  "/home": (req, res) => render(res, "./static/home.html"),
   "/404": (req, res) => {
     if (readStatic(req, res)) {
-
+      // 目前静态资源有：网站logo
     } else {
       res.writeHead(404, {"Content-Type": "text/html;charset=utf8"})
-      res.write(fs.readFileSync("./static/html/404.html", "utf-8"))
+      res.write(fs.readFileSync("./static/404.html", "utf-8"))
       res.end()
     }
   }
