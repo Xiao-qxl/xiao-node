@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>home</title>
+</head>
+<body>
+home页面
+<ul class="list"></ul>
+<script>
+  fetch('/home/list')
+    .then(res => res.json())
+    .then(res => {
+      render(res)
+    })
+
+  function render(data) {
+    console.log(data)
+    const list = data.map(item => `<li>${item}</li>`)
+    const oul = document.querySelector(".list")
+    oul.innerHTML = list.join('')
+  }
+</script>
+</body>
+</html>

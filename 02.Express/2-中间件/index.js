@@ -32,6 +32,8 @@ app.get("/login", func2)
 app.use('/user', UserRouter)
 
 /* 内置中间件 */
+/* 配置静态资源目录 */
+app.use('/static', express.static("static"))
 /* 第三方中间件 */
 
 /* 错误中间件 */
