@@ -2,12 +2,21 @@ const express = require('express')
 
 const app = express()
 
+/* 配置模板引擎 */
+app.set("views", "./views")
+app.set("view engine", "ejs")
+/* 配置静态资源 */
 app.use(express.static("web"))
+/*  */
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 app.get('/', (req, res) => {
-  res.redirect('/home.html');
+  res.redirect('/login');
 })
 
-const HomeRouter = require('./router/homeRouter')
+const LoginRouter = require('./router/login')
+const HomeRouter = require('./router/home')
+app.use('/login', LoginRouter)
 app.use('/home', HomeRouter)
 
 app.use((req, res) => {

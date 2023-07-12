@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>login 的 ejs文件</h1>
+    <p>这是后台的数据：<%=title%></p>
+    <p><%= isShow?'用户名密码不匹配':'' %></p>
+    <form action="/login" method="POST">
+        <div>用户名：<input type="text" name="username"></div>
+        <div>密码：<input type="password" name="password"></div>
+        <div><input type="submit" value="登录"></div>
+    </form>
+</body>
+</html>
