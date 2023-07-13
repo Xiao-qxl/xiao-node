@@ -2,3 +2,4 @@
 */node_modules/
 /.idea/
 */.idea/
+/02.Express/5-生成器/myapp/node_modules/
