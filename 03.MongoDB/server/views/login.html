@@ -84,9 +84,6 @@
     console.log(username.value)
     fetch('/api/user/64b8d36f87900753200fd0e3', {
       method: 'DELETE',
-      headers: {
-        "Content-Type": "application/json"
-      }
     })
       .then(res => res.json())
       .then(res => {
@@ -96,7 +93,7 @@
 
   getAll()
   function getAll() {
-    fetch("/api/user/list?page=1&limit=2")
+    fetch("/api/user?page=1&limit=99")
         .then(res => res.json())
         .then(res => {
           console.log(res)

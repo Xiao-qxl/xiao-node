@@ -51,7 +51,7 @@ router.delete('/:id', (req, res) => {
 })
 
 // 查询
-router.get('/list', (req, res) => {
+router.get('/', (req, res) => {
   const { page, limit } = req.query
   UserModel
     .find({}, ["_id", "username", "age"])
