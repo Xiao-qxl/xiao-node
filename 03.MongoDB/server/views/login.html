@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MongoDB</title>
+</head>
+<body>
+<h1>测试MongoDB增删改查</h1>
+<table border="1">
+  <thead>
+  <tr>
+    <td>id</td>
+    <td>用户名</td>
+    <td>年龄</td>
+  </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<div>
+  <div>
+    用户名：<input id="username" type="text">
+  </div>
+  <div>
+    密码：<input id="password" type="password">
+  </div>
+  <div>
+    年龄：<input id="age" type="number">
+  </div>
+  <div>
+    <button id="register">注册</button>
+  </div>
+</div>
+<hr>
+<button id="update">更新</button>
+<button id="delete">删除</button>
+<script>
+  const username = document.querySelector('#username')
+  const password = document.querySelector('#password')
+  const age = document.querySelector('#age')
+  const register = document.querySelector('#register')
+  const updateBtn = document.querySelector('#update')
+  const deleteBtn = document.querySelector('#delete')
+
+  register.onclick = () => {
+    console.log(username.value)
+    fetch('/api/user', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value,
+        age: age.value
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => res.json())
+    .then(res => {
+      console.log(res)
+    })
+  }
+
+  updateBtn.onclick = () => {
+    console.log(username.value)
+    const time = new Date().getTime()
+    fetch('/api/user/64b8d36f87900753200fd0e3', {
+      method: 'PUT',
+      body: JSON.stringify({
+        username: `修改的名字${time}`,
+        password: 'xiugaidemima',
+        age: 22
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+        .then(res => res.json())
+        .then(res => {
+          console.log(res)
+        })
+  }
+
+  deleteBtn.onclick = () => {
+    console.log(username.value)
+    fetch('/api/user/64b8d36f87900753200fd0e3', {
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+      })
+  }
+
+  getAll()
+  function getAll() {
+    fetch("/api/user/list?page=1&limit=2")
+        .then(res => res.json())
+        .then(res => {
+          console.log(res)
+          const tbody = document.querySelector('tbody')
+          tbody.innerHTML = res.map(item => `<tr>
+            <td>${item._id}</td>
+            <td>${item.username}</td>
+            <td>${item.age}</td>
+           </tr>`).join('')
+        })
+  }
+
+</script>
+</body>
+</html>
