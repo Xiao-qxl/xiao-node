@@ -1,5 +1,6 @@
 const express = require('express')
 
+const session = require('express-session')
 const app = express()
 
 require('./config/db.config')
@@ -10,15 +11,37 @@ app.engine("html", require("ejs").renderFile)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+/* session中间件 */
+app.use(session({
+  name: 'xiao\'s system',
+  secret: "xiao system secret",
+  cookie: {
+    maxAge: 1000 * 60 * 60,
+    secure: false
+  },
+  resave: true,
+  saveUninitialized: true
+}))
 
-app.get('/', (req, res) => {
-  res.redirect('/login')
+/* 设置中间件，session过期校验 */
+app.use((req, res, next) => {
+  if (!(req.url.includes('login') || req.session.user)) return res.redirect('/login')
+  next()
 })
 
-const LoginRouter = require('./router/login')
-app.use('/login', LoginRouter)
+app.get('/', (req, res) => {
+  res.render('home')
+})
 
-const UserApiRouter = require('./apis/user')
+app.get('/login', (req, res) => {
+  res.render('login')
+})
+
+const LoginApiRouter = require('./routes/login')
+app.use('/api/login', LoginApiRouter)
+
+const UserApiRouter = require('./routes/user')
+const e = require("express");
 app.use('/api/user', UserApiRouter)
 
 app.use((req, res) => {
