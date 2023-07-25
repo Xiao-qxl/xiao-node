@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
+    "connect-mongo": "^5.0.0",
     "ejs": "^3.1.9",
     "express-session": "^1.17.3",
     "md5": "^2.3.0",

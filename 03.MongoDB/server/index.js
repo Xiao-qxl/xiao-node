@@ -1,6 +1,7 @@
 const express = require('express')
 
 const session = require('express-session')
+const MongoStore = require('connect-mongo')
 const app = express()
 
 require('./config/db.config')
@@ -19,13 +20,21 @@ app.use(session({
     maxAge: 1000 * 60 * 60,
     secure: false
   },
-  resave: true,
-  saveUninitialized: true
+  resave: true, // 重新设置session后，会重新计算过期时间
+  saveUninitialized: true,
+  rolling: true, //为 true 表示 超时前刷新，cookie 会重新计时； 为 false 表示在超时前刷新多少次，都是按照第一次刷新开始计时。
+  store: MongoStore.create({
+    mongoUrl: 'mongodb://127.0.0.1:27017/xiao_session', // 新建一个数据库来存session
+    ttl: 1000 * 60 * 10 // 过期时间
+  })
 }))
 
 /* 设置中间件，session过期校验 */
 app.use((req, res, next) => {
-  if (!(req.url.includes('login') || req.session.user)) return res.redirect('/login')
+  const { session } = req
+  if (!(req.url.includes('login') || session.user)) return res.redirect('/login')
+  // 重新设置session（更新session）
+  session.mydate = Date.now()
   next()
 })
 
@@ -40,8 +49,10 @@ app.get('/login', (req, res) => {
 const LoginApiRouter = require('./routes/login')
 app.use('/api/login', LoginApiRouter)
 
+const LogoutApiRouter = require('./routes/logout')
+app.use('/api/logout', LogoutApiRouter)
+
 const UserApiRouter = require('./routes/user')
-const e = require("express");
 app.use('/api/user', UserApiRouter)
 
 app.use((req, res) => {

@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>测试MongoDB增删改查</h1>
+<button id="logout">退出登录</button>
 <table border="1">
   <thead>
   <tr>
@@ -96,7 +97,10 @@
     fetch("/api/user?page=1&limit=99")
         .then(res => res.json())
         .then(res => {
-          console.log(res)
+          if (res.ok === 0) {
+            location.href = '/login'
+            return
+          }
           const tbody = document.querySelector('tbody')
           tbody.innerHTML = res.map(item => `<tr>
             <td>${item._id}</td>
@@ -104,6 +108,18 @@
             <td>${item.age}</td>
            </tr>`).join('')
         })
+  }
+
+  const logout = document.querySelector('#logout')
+  logout.onclick = ()=>{
+    fetch("/api/logout")
+      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+        if (res.ok === 1) {
+          location.href = '/login'
+        }
+      })
   }
 
 </script>

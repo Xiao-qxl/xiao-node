@@ -8,6 +8,7 @@
 <div>
   <label for="username">用户名：</label>
   <input id="username" name="username" />
+  <br/>
   <label for="password">密码：</label>
   <input id="password" name="password" type="password" />
 </div>
@@ -30,7 +31,6 @@
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res)
         if (res.ok === 1) {
           location.href = '/'
         } else {
