@@ -10,6 +10,10 @@ app.set("views", "./views")
 app.set("view engine", "html")
 app.engine("html", require("ejs").renderFile)
 
+/* 页面路由 */
+const PageRouter = require('./routes/page')
+app.use('/', PageRouter)
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 /* session中间件 */
@@ -29,21 +33,43 @@ app.use(session({
   })
 }))
 
-/* 设置中间件，session过期校验 */
+const JWT = require("./utils/JWF");
+/* 设置中间件，session、token过期校验 */
 app.use((req, res, next) => {
-  const { session } = req
-  if (!(req.url.includes('login') || session.user)) return res.redirect('/login')
-  // 重新设置session（更新session）
-  session.mydate = Date.now()
-  next()
-})
-
-app.get('/', (req, res) => {
-  res.render('home')
-})
-
-app.get('/login', (req, res) => {
-  res.render('login')
+  const { url, session } = req
+  if (url.includes('login')) {
+    console.log('白名单')
+    return next()
+  }
+  // 校验token
+  let tokenBool = false
+  const token = req.headers["authorization"]?.split(' ')[1]
+  if (token) {
+    const payload = JWT.verify(token)
+    if (payload) {
+      tokenBool = true
+      // 重新计算token过期时间
+      const timeDiff = payload.exp - new Date().getTime()/1000
+      if (timeDiff < 10) {
+        const newToken = JWT.generate({
+          _id: payload._id,
+          username: payload.username
+        }, '60s')
+        res.header("Authorization", newToken)
+      }
+    } else {
+      console.log('token验证不通过')
+      return res.status(401).send({ ok: 0, errCode: 1, message: '无效token' })
+    }
+  }
+  if (session.user && tokenBool){
+    // 重新设置session（更新session）
+    // session.mydate = Date.now()
+    console.log('身份验证通过')
+    next()
+  } else {
+    return res.status(401).send({ ok: 0, errCode: 1, message: '身份验证不通过' })
+  }
 })
 
 const LoginApiRouter = require('./routes/login')

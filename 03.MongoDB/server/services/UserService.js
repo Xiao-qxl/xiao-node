@@ -15,9 +15,9 @@ const UserService = {
       _id: id
     })
   },
-  getUser: (page, limit) => {
+  getUser: (filter = {}, page = 1, limit = 10) => {
     return UserModel
-      .find({}, ["_id", "username", "age"])
+      .find(filter, ["_id", "username", "age"])
       .sort({age: 1})
       .skip((page - 1) * limit)
       .limit(limit)

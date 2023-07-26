@@ -34,6 +34,28 @@
 <hr>
 <button id="update">更新</button>
 <button id="delete">删除</button>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+<script>
+  axios.interceptors.request.use((config) => {
+    config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
+    return config
+  }, (err) => {
+    console.log(err)
+    return Promise.reject(err)
+  })
+  axios.interceptors.response.use((config) => {
+    const newToken = config.headers.Authorization
+    if (newToken) localStorage.setItem('token', newToken)
+    return config.data
+  }, (err) => {
+    console.log(err)
+    if (err.response.status === 401) {
+      localStorage.removeItem('token')
+      location.href = '/login'
+    }
+    return Promise.reject(err)
+  })
+</script>
 <script>
   const username = document.querySelector('#username')
   const password = document.querySelector('#password')
@@ -57,7 +79,11 @@
     })
     .then(res => res.json())
     .then(res => {
-      console.log(res)
+      if (res.ok === 1) {
+        alert('添加成功')
+      } else {
+        alert(res.message)
+      }
     })
   }
 
@@ -94,13 +120,15 @@
 
   getAll()
   function getAll() {
-    fetch("/api/user?page=1&limit=99")
-        .then(res => res.json())
+    axios.get("/api/user", {
+      params: {
+        page: 1,
+        limit: 99
+      }
+    })
+    // fetch("/api/user?page=1&limit=99")
+    //     .then(res => res.json())
         .then(res => {
-          if (res.ok === 0) {
-            location.href = '/login'
-            return
-          }
           const tbody = document.querySelector('tbody')
           tbody.innerHTML = res.map(item => `<tr>
             <td>${item._id}</td>

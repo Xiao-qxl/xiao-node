@@ -14,29 +14,46 @@
 </div>
 <button id="login">登录</button>
 
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 <script>
   const login = document.querySelector('#login')
   const username = document.querySelector('#username')
   const password = document.querySelector('#password')
   login.addEventListener('click', () => {
-    fetch('/api/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value,
-      }),
-      headers: {
-        "Content-type": "application/json"
-      }
+    // fetch('/api/login', {
+    //   method: 'POST',
+    //   body: JSON.stringify({
+    //     username: username.value,
+    //     password: password.value,
+    //   }),
+    //   headers: {
+    //     "Content-type": "application/json"
+    //   }
+    // })
+    //   .then(res => res.json())
+    //   .then(res => {
+    //     if (res.ok === 1) {
+    //       // 存储token
+    //
+    //       location.href = '/'
+    //     } else {
+    //       alert(res.message)
+    //     }
+    //   })
+    axios.post("/api/login", {
+      username: username.value,
+      password: password.value
     })
-      .then(res => res.json())
-      .then(res => {
-        if (res.ok === 1) {
-          location.href = '/'
-        } else {
-          alert(res.message)
-        }
-      })
+        .then(res => {
+          console.log(res)
+          if (res.data.ok === 1) {
+            // 存储token
+            localStorage.setItem('token', res.headers.authorization)
+            location.href = '/'
+          } else {
+            alert(res.data.message)
+          }
+        })
   }, false)
 </script>
 </body>
