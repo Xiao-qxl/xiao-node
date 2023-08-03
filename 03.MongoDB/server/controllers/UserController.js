@@ -25,6 +25,12 @@ const UserController = {
     const { page, limit } = req.query
     const data = await UserService.getUser({}, page, limit)
     res.send(data)
+  },
+  uploadUserAvatar: async (req, res) => {
+    const avatar = `/uploads/${req.file?.filename}`
+    const { username } = req.body
+    await UserService.updateUserAvatar(username, avatar)
+    res.send({ ok: 1 })
   }
 }
 

@@ -10,6 +10,8 @@ app.set("views", "./views")
 app.set("view engine", "html")
 app.engine("html", require("ejs").renderFile)
 
+app.use('/uploads', express.static('uploads'))
+
 /* 页面路由 */
 const PageRouter = require('./routes/page')
 app.use('/', PageRouter)
@@ -37,7 +39,7 @@ const JWT = require("./utils/JWF");
 /* 设置中间件，session、token过期校验 */
 app.use((req, res, next) => {
   const { url, session } = req
-  if (url.includes('login')) {
+  if (url.includes('login') || url.includes('upload') || url.includes('favicon.ico')) {
     console.log('白名单')
     return next()
   }
@@ -80,6 +82,9 @@ app.use('/api/logout', LogoutApiRouter)
 
 const UserApiRouter = require('./routes/user')
 app.use('/api/user', UserApiRouter)
+
+const UploadApiRouter = require('./routes/upload')
+app.use(UploadApiRouter)
 
 app.use((req, res) => {
   res.status(404).send('404 ERROR')

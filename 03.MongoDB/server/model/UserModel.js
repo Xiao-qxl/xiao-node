@@ -4,6 +4,7 @@ const UserType = {
   username: String,
   password: String,
   age: Number,
+  avatar: String,
 }
 // 创建一个模型，一一对应数据库的集合
 // 模型user将会对应users集合
