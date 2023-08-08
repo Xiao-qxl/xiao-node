@@ -123,3 +123,46 @@ function findOneStr(str) {
 输入：'abc'
 输出：['abc', 'acb', 'bca', 'bac', 'cab', 'cba']
 * */
+/**
+ * 利用回溯算法，计算所有字符串的组合
+ * @param {array} list - 字符串列表
+ * @param {array} result - 最终的结果
+ * @param {string} current - 当前的字符串
+ * @param {string} temp - 当前固定的字符
+ */
+function stringGroup(list = [], result = [], current = "", temp = "") {
+  current += temp;
+  if (list.length === 0) {
+    // 递归的出口，将对应结果添加到list中
+    return result.push(current);
+  }
+  for (let i = 0; i < list.length; i++) {
+    // 每次递归 固定第一个字符
+    temp = list.shift();
+    stringGroup(list, result, current, temp);
+    // 将删除的temp重新添加到queue尾部，实现将数组反转的效果，如[a,b,c]反转为[c,b,a]
+    list.push(temp);
+  }
+  // 这里去重是解决str中有重复的字母，比如str为'aacd'
+  return [...new Set(result)];
+}
+/*
+* 冒泡排序
+* 时间复杂度为O(n²)，稳定排序算法
+* */
+function bubbleSort(arr) {
+  let length = arr.length;
+  // 外层循环用控制 排序进行多少轮
+  for (let i = 0; i < length; i++) {
+    // 内层循环用于每一轮的数据比较
+    // 注意j的长度范围 length - i - 1
+    for (let j = 0; j < length - i - 1; j++) {
+      // 相邻元素，大的放到后面
+      if (arr[j] > arr[j + 1]) {
+        // 交换位置
+        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      }
+    }
+  }
+  return arr;
+}
