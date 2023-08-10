@@ -1,5 +1,5 @@
 const LoginService = require("../services/LoginService");
-const JWT = require("../utils/JWF");
+const JWT = require("../utils/JWT");
 const LoginController =  {
   postLogin: async (req, res) => {
     const { username, password } = req.body

@@ -35,7 +35,7 @@ app.use(session({
   })
 }))
 
-const JWT = require("./utils/JWF");
+const JWT = require("./utils/JWT");
 /* 设置中间件，session、token过期校验 */
 app.use((req, res, next) => {
   const { url, session } = req
