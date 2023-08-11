@@ -5,7 +5,6 @@ const Router = require('koa-router')
 const Static = require("koa-static");
 /* 参数处理 */
 const bodyParser = require("koa-bodyparser");
-const multer = require("koa-multer");
 /* ejs模板 */
 const views = require('koa-views')
 
@@ -17,9 +16,6 @@ app.use(Static(
 // 使用koa-bodyparser中间件，JSON和URL编码数据。
 // 获取post参数 application/x-www-form-urlencoded, application/json
 app.use(bodyParser())
-// 使用koa-multer中间件后，FormData编码数据。
-const upload = multer();
-app.use(upload.any())
 
 /* 调用ejs */
 app.use(views(path.join(__dirname, 'views'), { extension: "ejs" }))
