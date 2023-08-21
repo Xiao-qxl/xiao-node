@@ -1,0 +1,101 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "tauri-app",
+    "version": "1.0.0"
+  },
+  "tauri": {
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    },
+    "allowlist": {
+      "all": true,
+      "shell": {
+        "all": false,
+        "open": true
+      },
+      "http": {
+        "scope": [
+          "https://uapis.cn/api/**",
+          "https://api.iconify.design/**"
+        ]
+      },
+      "fs": {
+        "scope": [
+          "$RESOURCE/img/*"
+        ]
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["$RESOURCE/img/*"]
+      }
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.xiao.test",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "resources": ["./img"],
+      "windows": {
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        },
+        "wix": {
+          "language": ["en-US", "zh-CN"]
+        }
+      }
+    },
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost"
+    },
+    "windows": [
+      {
+        "decorations": false,
+        "fullscreen": false,
+        "resizable": true,
+        "center": true,
+        "title": "tauri-app",
+        "width": 800,
+        "height": 600,
+        "visible": false
+      },
+      {
+        "width": 400,
+        "height": 200,
+        "decorations": false,
+        "center": true,
+        "url": "splashscreen.html",
+        "label": "splashscreen"
+      },
+      {
+        "width": 800,
+        "height": 600,
+        "center": false,
+        "visible": false,
+        "url": "test.html",
+        "label": "test"
+      }
+    ],
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZBMDRGRkNCRTlCMzJFClJXUXVzK25ML3dScUFEbzNvUmR3cEsvN3J0SU1mMUVjUVRmd2RmQm1zTUprNWh3RCtmWnZvY0xGCg=="
+    }
+  }
+}
