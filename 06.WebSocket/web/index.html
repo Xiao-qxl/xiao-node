@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket</title>
+</head>
+<body>
+<h1>聊天室</h1>
+<script>
+  const ws = new WebSocket("ws://localhost:8080")
+
+  ws.onopen = () => {
+    console.log('连接成功')
+  }
+
+  ws.onmessage = (msgObj) => {
+    console.log(msgObj)
+  }
+
+  ws.onerror = () => {
+    console.log('连接出错')
+  }
+
+  ws.onclose = () => {
+    console.log('连接关闭')
+  }
+</script>
+</body>
+</html>
