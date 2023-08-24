@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div>
+  <label for="username">用户名：</label>
+  <input id="username" name="username" />
+  <br/>
+  <label for="password">密码：</label>
+  <input id="password" name="password" type="password" />
+</div>
+<button id="login">登录</button>
+
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script>
+  const login = document.querySelector('#login')
+  const username = document.querySelector('#username')
+  const password = document.querySelector('#password')
+  login.addEventListener('click', () => {
+    axios.post("/api/login", {
+      username: username.value,
+      password: password.value
+    })
+        .then(res => {
+          console.log(res)
+          if (res.data.ok === 1) {
+            // 存储token
+            localStorage.setItem('token', res.headers.authorization)
+            location.href = '/page/chat'
+          } else {
+            alert(res.data.message)
+          }
+        })
+  }, false)
+</script>
+</body>
+</html>

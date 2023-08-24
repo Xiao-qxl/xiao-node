@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>聊天室</title>
+</head>
+<body>
+<h1>聊天室</h1>
+<script>
+  const WebSocketType = {
+    Error: 0,
+    GroupList: 1,
+    GroupChat: 2,
+    SingleChat: 3
+  }
+  const token = localStorage.getItem('token')
+  const ws = new WebSocket(`ws://localhost:8080?token=${token}`)
+  ws.onopen = () => {
+    console.log('open')
+  }
+  ws.onmessage = ({ data }) => {
+    const msgObj = JSON.parse(data)
+    switch (msgObj.type) {
+      case WebSocketType.Error:
+        localStorage.removeItem("token");
+        location.href = '/page/login'
+        break;
+      case WebSocketType.GroupChat:
+        console.log(msgObj)
+        break;
+      default:
+        break;
+    }
+  }
+</script>
+</body>
+</html>
