@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>聊天室</title>
+  <!-- 引入socket.io -->
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+<h1>聊天室（<span id="user"></span>）</h1>
+<div>
+  <label for="text">
+    <input type="text" id="text"/>
+  </label>
+  <button id="send">发送</button>
+  <label for="select"></label><select name="" id="select"></select>
+</div>
+
+<div>
+  <h2>集体聊天室</h2>
+  <ul id="groupChat" style="border: 1px solid #000;">
+  </ul>
+</div>
+
+<script>
+  const select = document.querySelector('#select')
+  const text = document.querySelector('#text')
+  const send = document.querySelector('#send')
+  const groupChat = document.querySelector('#groupChat')
+  const user = document.querySelector('#user')
+  user.innerText = localStorage.getItem('username')
+
+  const WebSocketType = {
+    Error: 0,
+    GroupList: 1,
+    GroupChat: 2,
+    SingleChat: 3
+  }
+  const token = localStorage.getItem('token')
+  // 默认连接localhost:3000
+  const socket = io(`ws://localhost:3000?token=${token}`)
+
+  socket.on(WebSocketType.GroupList, (onlineList) => {
+    select.innerHTML = ""
+    select.innerHTML =
+        `<option value="all">所有人</option>` +
+        onlineList.map(user => `<option value="${user.username}">${user.username}</option>`).join('')
+  })
+
+  socket.on(WebSocketType.GroupChat, (msg) => {
+    const username = msg.user?.username || '系统通知'
+    const newLi = document.createElement('li');
+    newLi.innerText = `${username}：${msg.data}`
+    groupChat.appendChild(newLi)
+  })
+
+  socket.on(WebSocketType.SingleChat, (msg) => {
+    console.log(msg)
+  })
+
+  socket.on(WebSocketType.Error, (msg) => {
+    localStorage.removeItem("token");
+    location.href = '/page/login'
+  })
+
+  const createMessage = (data, to) => ({data, to})
+
+  send.onclick = () => {
+    if (select.value === 'all') {
+      // console.log('群发')
+      socket.emit(WebSocketType.GroupChat, createMessage(text.value))
+    } else {
+      // console.log('私聊')
+      socket.emit(WebSocketType.SingleChat, createMessage(text.value, select.value))
+    }
+    text.value = ''
+  }
+</script>
+</body>
+</html>

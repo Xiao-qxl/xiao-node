@@ -13,13 +13,47 @@ wss.on('connection', (ws, req) => {
   } else {
     ws.send(createMessage(WebSocketType.Error, null, "身份验证失败"))
   }
+
   ws.on('message', (data) => {
-    console.log('received：%s', data)
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebsocketServer.OPEN) {
-        client.send(data, { binary: false })
-      }
-    })
+    const msgObj = JSON.parse(data)
+
+    switch (msgObj.type) {
+      case WebSocketType.GroupList:
+        sendAll()
+        break;
+      case WebSocketType.GroupChat:
+        console.log(msgObj.data)
+        wss.clients.forEach((client) => {
+          if (client.readyState === WebsocketServer.OPEN) {
+            client.send(createMessage(
+              WebSocketType.GroupChat,
+              ws.user,
+              msgObj.data
+            ))
+          }
+        })
+        break;
+      case WebSocketType.SingleChat:
+        wss.clients.forEach((client) => {
+          if (client.user?.username === msgObj.to && client.readyState === WebsocketServer.OPEN) {
+            client.send(createMessage(
+              WebSocketType.SingleChat,
+              ws.user,
+              msgObj.data
+            ))
+          }
+        })
+        break;
+      case WebSocketType.Error:
+        break;
+      default:
+        break
+    }
+  })
+
+  ws.on('close', () => {
+    wss.clients.delete(ws.user)
+    sendAll()
   })
 })
 
@@ -33,6 +67,20 @@ const WebSocketType = {
 function createMessage(type, user, data) {
   return JSON.stringify({
     type, user, data
+  })
+}
+
+function sendAll() {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebsocketServer.OPEN) {
+      client.send(createMessage(
+        WebSocketType.GroupList,
+        null,
+        Array.from(wss.clients)
+          .map(item => item.user)
+          .filter(item => item)
+      ))
+    }
   })
 }
 
