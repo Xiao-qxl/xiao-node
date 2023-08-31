@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>前端监控SDK</title>
+</head>
+<body>
+<div id="container">
+  <div class="content">
+    <input type="button" value="点击抛出错误" onclick="errorClick()">
+    <input type="button" value="点击抛出Promise错误" onclick="promiseErrorClick()">
+  </div>
+</div>
+
+<script>
+  function errorClick() {
+    window.someVar.error = "error";
+  }
+
+  function promiseErrorClick() {
+    new Promise(((resolve, reject) => {
+      window.someVar.error = "error"; // errorReason是Object
+      reject('error') // errorReason是String
+    }))
+
+  }
+</script>
+</body>
+</html>
