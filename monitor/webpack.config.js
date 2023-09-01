@@ -15,7 +15,8 @@ module.exports = {
     filename: 'monitor.js' // 文件名
   },
   devServer: {
-    static: path.resolve(__dirname, 'dist') // devServer静态文件目录
+    port: 8888,
+    static: path.resolve(__dirname, 'dist'), // devServer静态文件目录
   },
   plugins: [
     new HtmlWebpackPlugin({ // 自动打包出html文件的

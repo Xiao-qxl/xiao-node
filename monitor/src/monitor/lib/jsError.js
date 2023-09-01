@@ -7,21 +7,34 @@ export function injectJsError() {
   // 监听全局未捕获的错误
   // event: 错误事件对象
   window.addEventListener('error', (event) => {
-    // console.log(event)
+    console.log(event)
     let lastEvent = getLastEvent() // 最后一个交互事件
     // console.log(lastEvent)
-    tracker.send({
-      kind: 'stability', // 监控指标大类
-      type: 'error', // 小类型
-      errorType: 'jsError', // JS执行错误
-      url: '', // 访问哪个路径报错了
-      message: event.message, // 报错信息
-      filename: event.filename, // 哪个文件报错了
-      position: `${event.lineno}:${event.colno}`,
-      stack: getLines(event.error.stack),
-      selector: lastEvent? getSelector(lastEvent): '', // 代表最后一个操作的元素
-    })
-  })
+
+    if (event.target && ['SCRIPT', 'LINK'].includes(event.target.tagName)) {
+      tracker.send({
+        kind: 'stability', // 监控指标大类
+        type: 'error', // 小类型
+        errorType: 'responseError', // js或css资源加载错误
+        url: '', // 访问哪个路径报错了
+        filename: event.target.src || event.target.href, // 哪个文件报错了
+        tagName: event.target.tagName, // script
+        selector: lastEvent? getSelector(lastEvent): '', // 代表最后一个操作的元素
+      })
+    } else {
+      tracker.send({
+        kind: 'stability', // 监控指标大类
+        type: 'error', // 小类型
+        errorType: 'jsError', // JS执行错误
+        url: '', // 访问哪个路径报错了
+        message: event.message, // 报错信息
+        filename: event.filename, // 哪个文件报错了
+        position: `${event.lineno}:${event.colno}`,
+        stack: getLines(event.error?.stack),
+        selector: getSelector(event), // 代表最后一个操作的元素
+      })
+    }
+  }, true)
 
   window.addEventListener('unhandledrejection', (event) => {
     console.log(event)
@@ -31,6 +44,7 @@ export function injectJsError() {
     if (typeof reason === 'string') {
       message = reason
     } else if (typeof reason === 'object') {
+      message = reason.stack.message
       if (reason.stack) {
         let matchResult = reason.stack.match(/at\s+(.+):(\d+):(\d+)/)
         console.log(matchResult)
@@ -43,7 +57,7 @@ export function injectJsError() {
     tracker.send({
       kind: 'stability', // 监控指标大类
       type: 'error', // 小类型
-      errorType: 'jsError', // JS执行错误
+      errorType: 'promiseError', // JS执行错误
       url: '', // 访问哪个路径报错了
       message, // 报错信息
       filename, // 哪个文件报错了
@@ -51,7 +65,7 @@ export function injectJsError() {
       stack,
       selector: lastEvent? getSelector(lastEvent): '', // 代表最后一个操作的元素
     })
-  })
+  }, true)
 }
 
 function getLines(stack) {

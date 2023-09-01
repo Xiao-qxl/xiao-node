@@ -14,7 +14,7 @@ let APIVersion = '0.6.0'
 function getExtraData() {
   return {
     title: document.title,
-    url: location.url,
+    url: location.href,
     timestamp: Date.now(),
     userAgent: userAgent.parse(navigator.userAgent).fullName
   }
@@ -34,7 +34,7 @@ class SendTracker {
       host, // 所在地域的服务入口。例如cn-hangzhou.log.aliyuncs.com
       project, // Project名称。
       logstore, // Logstore名称。
-      time: 10, // 发送日志的时间间隔，默认是10秒。
+      time: 5, // 发送日志的时间间隔，默认是10秒。
       count: 10, // 发送日志的数量大小，默认是10条。
       topic: 'xiao',// 自定义日志主题。
       source: 'PC',

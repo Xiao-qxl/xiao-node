@@ -8,7 +8,8 @@
 <div id="container">
   <div class="content">
     <input type="button" value="点击抛出错误" onclick="errorClick()">
-    <input type="button" value="点击抛出Promise错误" onclick="promiseErrorClick()">
+    <input type="button" value="点击抛出Promise错误js" onclick="promiseErrorClick()">
+    <input type="button" value="点击抛出Promise错误reject" onclick="promiseErrorClick2()">
   </div>
 </div>
 
@@ -19,11 +20,21 @@
 
   function promiseErrorClick() {
     new Promise(((resolve, reject) => {
-      window.someVar.error = "error"; // errorReason是Object
-      reject('error') // errorReason是String
+      // errorReason是Object
+      // Uncaught (in promise) TypeError: Cannot set properties of undefined (setting 'error')
+      window.someVar.error = "error";
     }))
+  }
 
+  function promiseErrorClick2() {
+    new Promise(((resolve, reject) => {
+      reject('error') // errorReason是String Uncaught (in promise) error
+    }))
   }
 </script>
+
+<!-- webpack打包后 script引入默认加上了defer -->
+<!--<link href="someError.css">-->
+<script defer src="someError.js"></script>
 </body>
 </html>
